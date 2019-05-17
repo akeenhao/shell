@@ -1,0 +1,362 @@
+remotedir=/midware/ipop-admin
+remoteip=10.203.109.135
+remotebakfile=bak
+remotereadyfile=ready
+remoteuser=root
+
+locshell=shell-dev.sh
+remoteshell=shell.sh
+locshelldir=D:/SGM/IPOP-server/
+
+locfile=IPOP-server-0.0.1-SNAPSHOT.war
+remotefile=IPOP-server-0.0.1-SNAPSHOT.war
+locfiledir=D:/SGM/IPOP-server/target/
+
+main(){
+    while true
+    do
+	    selectenv
+	    while true
+	    do
+	        selectapp
+	        cd $locshelldir
+            echo -e "\e[1;32m  (cd $locshelldir)\e[0m\n"
+	        while true
+	        do
+	            selectip
+	            deploy
+	            echo -en "\n是否还需要部署其他服务器?: y/n:"
+                read v
+          	    if [ -z $v ]; then
+              	    echo -e "\e[1;32m不部署其他服务器\e[0m"
+	                break
+	            fi
+	            if [ $v == "y" ]||[ $v == "1" ]; then
+	                continue;
+	            else
+              	    echo -e "\e[1;32m不部署其他服务器\e[0m"
+	                break
+	            fi
+	            break
+    	    done
+    	    echo -en "\n是否还需要部署其他应用?: y/n:"
+            read v
+            if [ -z $v ]; then
+                echo -e "\e[1;32m不部署其他应用\e[0m"
+                break
+            fi
+            if [ $v == "y" ]||[ $v == "1" ]; then
+                continue;
+            else
+                echo -e "\e[1;32m不部署其他应用\e[0m"
+            fi
+            break
+    	done
+    echo -en "\n是否还需要部署其他环境?: y/n:"
+    read v
+    if [ -z $v ]; then
+        echo -e "\e[1;32m不部署其他环境\e[0m"
+        sleep 0.7
+        echo -en "\n..................................................................\e[1;32mexit"
+        sout 2 1
+        exit
+    fi
+	if [ $v == "y" ]||[ $v == "1" ]; then
+	    continue;
+    else
+        echo -e "\e[1;32m不部署其他环境\e[0m"
+        sleep 0.7
+        echo -en "\n..................................................................\e[1;32mexit"
+        sout 2 1
+        exit
+	fi
+    done
+}
+
+sout(){
+    i=$1
+    while true
+    do
+        echo -en "\e[1;32m."
+        sleep $2
+        i=$[i-1];
+        if [ $i -lt 0 ]; then
+            break
+        fi
+    done
+}
+
+selectip(){
+	while true
+	do
+	    echo -n "输入需要部署的服务器ip:"
+	    read v
+	    if [ -z $v ]; then
+	          echo -e "\e[1;32mip为空,默认部署dev:(10.203.109.135)\e[0m"
+	          break;
+	    fi
+        if [[ $v =~ ^([0-9]{1,2}|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]{1,2}|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]{1,2}|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]{1,2}|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$ ]];then
+	        remoteip=$v
+	        break
+        else
+            echo -e "\e[1;31mip非法($v)\e[0m"
+            continue
+	    fi
+
+	    break
+	  done
+
+	echo -e "\e[1;32m正在部署:"$remoteip"\e[0m"
+}
+selectenv(){
+    while true
+    do
+	    echo -n "输入部署环境（dev|qa|prod）:"
+	    read v
+	    if [ -z $v ]; then
+    	    locshell=shell-dev.sh
+	        echo -e "\e[1;32mdev部署\e[0m"
+	        echo ""
+	    else
+	        if [ $v == "dev" ]; then
+	            locshell=shell-dev.sh
+	            echo -e "\e[1;32mdev部署\e[0m"
+	            break;
+	        fi
+	        if [ $v == "qa" ]; then
+    	        locshell=shell-qa.sh
+	            echo -e "\e[1;32mqa部署\e[0m"
+	            break;
+	        fi
+	        if [ $v == "prod" ]; then
+	            locshell=shell-prod.sh
+	            echo -e "\e[1;32mprod部署\e[0m"
+	            break;
+	        fi
+	        echo -e "\e[1;31m不要瞎写\e[0m"
+	        continue
+	    fi
+	    break
+	    echo ""
+	done
+}
+selectapp(){
+    while true
+    do
+	    echo -n "输入部署的应用（1:ipop|2:mportal|3:sform|4:sboard）:"
+	    read v
+	    if [ -z $v ]; then
+	        echo -en "\e[1;32m默认部署ipop\e[0m"
+	    else
+	        case "$v" in
+              "1")
+    	        echo -en "\e[1;32m部署ipop\e[0m"
+                locfile=IPOP-server-0.0.1-SNAPSHOT.war
+                locfiledir=D:/SGM/IPOP-server/target/
+                locshelldir=D:/SGM/IPOP-server/
+                remotedir=/midware/ipop-admin
+                remotefile=IPOP-server-0.0.1-SNAPSHOT.war
+                break
+                ;;
+              "2")
+    	        echo -en "\e[1;32m部署mportal\e[0m"
+                locfiledir=D:/SGM/mPortal-server/target/
+                locfile=mportal-server-0.0.1-SNAPSHOT.war
+                locshelldir=D:/SGM/mPortal-server/
+                remotedir=/midware/ipop-mportal
+                remotefile=mportal-server-0.0.1-SNAPSHOT.war
+                break
+                ;;
+              "3")
+    	        echo -en "\e[1;32m部署sform\e[0m"
+                locfiledir=D:/SGM/sForm-server/target/
+                locfile=dynamic-form-0.0.1-SNAPSHOT.jar
+                locshelldir=D:/SGM/sForm-server/
+                remotedir=/midware/ipop-sform
+                remotefile=dynamic-form-0.0.1-SNAPSHOT.jar
+                break
+                ;;
+              "4")
+    	        echo -en "\e[1;32m部署sboard\e[0m"
+                locfiledir=D:/SGM/sBoard-server/target/
+                locfile=sboard.war
+                locshelldir=D:/SGM/sBoard-server/
+                remotedir=/midware/apache-tomcat-8.5.28/webapps
+                remotefile=ROOT.war
+                break
+                ;;
+            esac
+	        echo -e "\e[1;31m输入错误，请重新选择\e[0m"
+	        continue
+	    fi
+	    break
+	    echo ""
+	done
+}
+
+deploy(){
+    echo -en "\n是否全自动部署? y/n:"
+	read v
+	if [ -z $v ]; then
+	    echo -e "\e[1;32m手动部署\e[0m"
+	    deployhand
+	    return
+	fi
+	if [ $v == "y" ]||[ $v == "1" ]; then
+		echo  -e "\e[1;32m自动部署\e[0m"
+        deployauto
+    else
+	    echo  -e "\e[1;32m手动部署\e[0m"
+        deployhand
+	fi
+
+	echo ""
+    echo  -e "\e[1;32m部署完毕:"$remoteip"\e[0m\n"
+}
+
+deployauto(){
+	git pull
+	mvn clean package -Dmaven.test.skip=true
+
+	checkdir $remotedir
+	checkdir $remotedir/$remotebakfile
+	checkdir $remotedir/$remotereadyfile
+
+	upload $locshelldir $locshell $remoteuser $remoteip $remotedir            $remoteshell
+	upload $locfiledir  $locfile  $remoteuser $remoteip $remotedir/$remotereadyfile $remotefile
+
+	shell $remoteuser $remoteip $remotedir $remoteshell bak
+	shell $remoteuser $remoteip $remotedir $remoteshell stop
+	shell $remoteuser $remoteip $remotedir $remoteshell update
+	shell $remoteuser $remoteip $remotedir $remoteshell start
+}
+
+deployhand(){
+	echo -n "是否更新代码? y/n:"
+	read v
+	if [ -z $v ]; then
+    echo  -e "\e[1;32m \b不更新代码 \e[0m"
+	else
+        if [ $v == "y" ]||[ $v == "1" ]; then
+	        git pull
+        else
+            echo  -e "\e[1;32m \b不更新代码 \e[0m"
+	    fi
+	fi
+
+	echo -n "是否打包? y/n:"
+	read v
+	if [ -z $v ]; then
+    echo  -e "\e[1;32m \b不打包 \e[0m"
+    else
+        if [ $v == "y" ]||[ $v == "1" ]; then
+    	    mvn clean package -Dmaven.test.skip=true
+        else
+            echo  -e "\e[1;32m \b不打包 \e[0m"
+	    fi
+	fi
+
+	echo -n "是否确认目录? y/n:"
+	read v
+	if [ -z $v ]; then
+    echo  -e "\e[1;32m \b不确认目录 \e[0m"
+    else
+        if [ $v == "y" ]||[ $v == "1" ]; then
+	        checkdir $remotedir
+	        checkdir $remotedir/$remotebakfile
+	        checkdir $remotedir/$remotereadyfile
+        else
+            echo  -e "\e[1;32m \b不确认目录 \e[0m"
+	    fi
+	fi
+
+	echo -n "是否上传脚本? y/n:"
+	read v
+	if [ -z $v ]; then
+    echo  -e "\e[1;32m \b不上传脚本 \e[0m"
+    else
+        if [ $v == "y" ]||[ $v == "1" ]; then
+	        upload $locshelldir $locshell $remoteuser $remoteip $remotedir   $remoteshell
+        else
+            echo  -e "\e[1;32m \b不上传脚本 \e[0m"
+	    fi
+	fi
+
+	echo -n "是否上传代码包? y/n:"
+	read v
+	if [ -z $v ]; then
+    echo  -e "\e[1;32m \b不上传代码包 \e[0m"
+    else
+        if [ $v == "y" ]||[ $v == "1" ]; then
+	        upload $locfiledir  $locfile  $remoteuser $remoteip $remotedir/$remotereadyfile $remotefile
+        else
+            echo  -e "\e[1;32m \b不上传代码包 \e[0m"
+	    fi
+	fi
+
+	echo -n "是否备份? y/n:"
+	read v
+	if [ -z $v ]; then
+    echo  -e "\e[1;32m \b不备份 \e[0m"
+    else
+        if [ $v == "y" ]||[ $v == "1" ]; then
+	        shell $remoteuser $remoteip $remotedir $remoteshell bak
+        else
+            echo  -e "\e[1;32m \b不备份 \e[0m"
+	    fi
+	fi
+
+	echo -n "是否停止服务? y/n: "
+	read v
+	if [ -z $v ]; then
+    echo  -e "\e[1;32m \b不停止服务 \e[0m"
+    else
+        if [ $v == "y" ]||[ $v == "1" ]; then
+	        shell $remoteuser $remoteip $remotedir $remoteshell stop
+        else
+            echo  -e "\e[1;32m \b不停止服务 \e[0m"
+	    fi
+	fi
+
+	echo -n "是否更新代码? y/n: "
+	read v
+	if [ -z $v ]; then
+    echo  -e "\e[1;32m \b不更新代码 \e[0m"
+    else
+        if [ $v == "y" ]||[ $v == "1" ]; then
+	        shell $remoteuser $remoteip $remotedir $remoteshell update
+        else
+            echo  -e "\e[1;32m \b不更新代码 \e[0m"
+	    fi
+	fi
+
+	echo -n "是否启动服务? y/n: "
+	read v
+	if [ -z $v ]; then
+    echo  -e "\e[1;32m \b不启动服务 \e[0m"
+    else
+        if [ $v == "y" ]||[ $v == "1" ]; then
+	        shell $remoteuser $remoteip $remotedir $remoteshell start
+        else
+            echo  -e "\e[1;32m \b不启动服务 \e[0m"
+	    fi
+	fi
+}
+
+checkdir(){
+    ssh $remoteuser@$remoteip "[ -d $1 ] && echo -e \"\e[1;32mdir:$1 is ok \e[0m\" || mkdir -p $1"
+}
+upload(){
+    scp -r $1$2 $3@$4:$5/$6
+}
+shell(){
+    ssh $1@$2 "cd $3/; sh ./$4 $5"
+}
+
+
+
+case "$1" in
+  "")
+    main
+    ;;
+esac
