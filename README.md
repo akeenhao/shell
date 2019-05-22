@@ -17,7 +17,7 @@
   
 -#  启动：  ./main.sh
  -   （1）首先选择需要部署的应用：（我们的项目是如下4个应用，这个可以根据不同的项目在shell里进行扩展）
-![Alt text](/path/to/img.jpg)
+![Alt text](https://upload-images.jianshu.io/upload_images/17375175-8cd3d483981be608.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 -   （2）选择部署的环境，（我们的项目是3个环境dev、qa、prod）
 
