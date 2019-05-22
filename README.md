@@ -1,9 +1,8 @@
-这是用来部署java后台项目的shell脚本
+#这是用来部署java后台项目的shell脚本
 
 支持dev、qa、生产多环境部署。
 支持多节点部署。
 支持多应用选择部署。
-
 
 操作步骤：
    --  执行main.sh sh ./main.sh  
