@@ -20,28 +20,22 @@
 ![Alt text](https://upload-images.jianshu.io/upload_images/17375175-8cd3d483981be608.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 -   （2）选择部署的环境，（我们的项目是3个环境dev、qa、prod）
-
-
+![Alt text](https://upload-images.jianshu.io/upload_images/17375175-32c026a22bdcf5b1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 -   （3）选择部署方式，（我做的是自动部署或者手动部署）
-
-
+![Alt text](https://upload-images.jianshu.io/upload_images/17375175-4df7ff74e410269a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 -   （4.1）先说手动部署，里面包括所有的准备动作
-
-
+![Alt text](https://upload-images.jianshu.io/upload_images/17375175-59a97b57191ddb37.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 -   （4.2）再说自动部署，自动执行手动部署的全部动作
-
-
+![Alt text](https://upload-images.jianshu.io/upload_images/17375175-3185a2edc0a63661.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 -   （5）进入循环，选择部署其他环境或其他应用
-
-
+![Alt text](https://upload-images.jianshu.io/upload_images/17375175-99ef2a626814ff2a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 -   （6）结果，启动项目完毕
-
-
+![Alt text](https://upload-images.jianshu.io/upload_images/17375175-ebc4d2e914a88820.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
 三、备注
