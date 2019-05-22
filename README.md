@@ -6,8 +6,8 @@
 
 
 操作步骤：
-   （1）执行main.sh sh ./main.sh  
-   （2）进行交互式操作，内部会自动调用remoteshell.sh进行服务器的一系列动作。
+   ~~~ 执行main.sh sh ./main.sh  
+   ~~~ 进行交互式操作，内部会自动调用remoteshell.sh进行服务器的一系列动作。
 
 
 
